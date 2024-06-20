@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+    environment {
+        AZURE_CRED = credentials('Azure_SP')
+       
+    }
+    tools {
+  terraform 'terraform'
+}
+
+    stages {
+        stage('checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/bhavikpalia/Terraform-.git', credentialsId: 'github-PAT'
+            }
+        }
+        stage('Terraform Init') {
+            steps {
+                script {
+                    bat 'terraform init > init.log 2>&1'
+                }
+            }
+        }
+        stage('Terraform Plan') {
+            steps {
+                script {
+                    bat 'terraform plan -out=tfplan > plan.log 2>&1'
+                }
+            }
+        }
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    bat 'terraform apply -input=false tfplan > apply.log 2>&1'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            // Archive the log files regardless of build result
+            archiveArtifacts artifacts: '**/*.log', allowEmptyArchive: true
+        }
+        failure {
+            echo 'Pipeline failed. Check the logs for details.'
+        }
+    }
+}
