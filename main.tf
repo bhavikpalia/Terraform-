@@ -63,6 +63,14 @@ resource "azurerm_virtual_machine" "vm" {
     sku       = "2019-Datacenter"
     version   = "latest"
   }
+  os_profile {
+    computer_name  = "myVM"
+    admin_username = var.admin_username
+    admin_password = var.admin_password
+  }
 
+  os_profile_windows_config {
+    enable_automatic_upgrades = true
+  }
 
 }
