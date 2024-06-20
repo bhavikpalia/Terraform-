@@ -64,19 +64,5 @@ resource "azurerm_virtual_machine" "vm" {
     version   = "latest"
   }
 
-  os_profile {
-    computer_name  = "mycomp"
-    admin_username = var.admin_username
-    admin_password = var.admin_password
-  }
 
 }
-
-variable "subscription_id" {}
-variable "client_id" {}
-variable "client_secret" {}
-variable "tenant_id" {}
-variable "resource_group_name" {}
-variable "location" {}
-variable "admin_username" {}
-variable "admin_password" {}
